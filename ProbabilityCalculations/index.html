@@ -2,13 +2,10 @@
 <html>
 <head>
   <title>確率計算</title>
-
   <link rel="icon" href="../resource/favicon/ProbabilityCalculations.ico" type="image/x-ico">
   <link rel="stylesheet" href="../base.css">
-
-  <!-- jQuery読み込み -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
 
 <!--====== CSS ======-->
@@ -17,8 +14,8 @@
   .input-th { padding: 50px; }
   .input-td { padding: 10px; text-align: center; }
 
-  .main-div{ position: absolute; top: 80px; left: 135px; width: 375px; height: 220px; margin-top: 10px; padding: 5px; background-color: #4a41a3; }
-  .info-div{ position: absolute; top: 350px; left: 135px; width: 375px; height:auto ;margin-top: 10px; padding: 5px; background-color: #8076ec; max-width: 410px; }
+  .main-div{ position: relative; top: -180px; left: 95px; width: 375px; height: 220px; margin-top: 10px; padding: 5px; background-color: #4a41a3; }
+  .info-div{ position: relative; top: -175px; left: 95px; width: 375px; height:auto ;margin-top: 10px; padding: 5px; background-color: #8076ec; max-width: 410px; }
 
   input { max-width: 80px; }
 </style>
@@ -115,7 +112,7 @@ function showAnswer() {
 <!--====== 本体 ======-->
 <body>
   <h1>確率計算</h1>
-  <div id="sidebar-component" class="sidebar"></div>
+  <div id="sidebar-component"></div>
 
   <div class="main-div">
     <div class="input-div">

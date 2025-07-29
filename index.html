@@ -4,16 +4,14 @@
   <title>webToolTop</title>
   <link rel="icon" href="resource/favicon/Top.ico" type="image/x-ico">
   <link rel="stylesheet" href="base.css">
-
-  <!-- jQuery読み込み -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
 
 <!--====== CSS ======-->
 <style type="text/css">
 
-.menu-div { position: relative; left: 150px; top: -160px; }
+.menu-div { position: relative; left: 95px; top: -175px; }
 .menu-td { text-align: center; padding: 10px; font-size: 1.5em; width: 150px;}
 .menu-icon { padding: 5px; width: 100px; height: auto; }
 
@@ -21,20 +19,19 @@
 
 <!--====== script ======-->
 <script type="text/javascript">
+// ローカル対応
+const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
 document.addEventListener('DOMContentLoaded', () => {
   // サイドバー読み込み
   fetch('sidebar.html')
   .then(response => response.text())
   .then(data => {
     document.getElementById('sidebar-component').innerHTML = data;
-    // ローカル対応
-    const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
     // サイドバー用URL自動変更
     document.querySelectorAll('#sidebar-component a[data-link]').forEach(link => {
       const relative = link.getAttribute('data-link');
       link.setAttribute('href', basePath + relative);
     });
-
     // サイドバー用画像パス自動変更
     document.querySelectorAll('img[data-src]').forEach(img => {
       const relative = img.getAttribute('data-src');
@@ -44,16 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
   .catch(error => {
     console.error('読み込み失敗:', error);
   });
+
+  document.querySelectorAll('a[data-link]').forEach(link => {
+    const relative = link.getAttribute('data-link');
+    link.setAttribute('href', basePath + relative);
+  });
+
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    const relative = img.getAttribute('data-src');
+    img.src = basePath + relative;
+  });
 });
 
-  const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
-  // ローカル対応
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('a[data-link]').forEach(link => {
-      const relative = link.getAttribute('data-link');
-      link.setAttribute('href', basePath + relative);
-    });
-  });
+
 </script>
 
 <!--====== 本体 ======-->
@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
       </td>
 
-
       <td class="menu-td">
         <a data-link="/ProbabilityCalculations/index.html">
           <img class="menu-icon pink" data-src="/resource/sidebar_icon/ProbabilityCalculations.png" />
@@ -78,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </a>
       </td>
     </table>
-
   </div>
 </body>
 </html>
