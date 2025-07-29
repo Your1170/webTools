@@ -1,0 +1,24 @@
+body {
+  background-color: #0b082a;
+}
+
+h1 {
+  color: #e60f61;
+}
+
+a {
+  text-decoration: none;
+}
+
+.white {
+  color: #ffffff;
+  margin: 0px;
+}
+
+.green {
+  background-color: greenyellow;
+}
+
+.pink {
+  background-color: palevioletred;
+}

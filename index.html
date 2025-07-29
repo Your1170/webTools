@@ -1,9 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>確率計算機</title>
+  <title>webToolTop</title>
+  <link rel="icon" href="resource/favicon/Top.ico" type="image/x-ico">
+  <link rel="stylesheet" href="base.css">
+
+  <!-- jQuery読み込み -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 </head>
+
+<!--====== CSS ======-->
+<style type="text/css">
+
+.menu-div { position: relative; left: 150px; top: -160px; }
+.menu-td { text-align: center; padding: 10px; font-size: 1.5em; width: 150px;}
+.menu-icon { padding: 5px; width: 100px; height: auto; }
+
+</style>
+
+<!--====== script ======-->
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', () => {
+  // サイドバー読み込み
+  fetch('sidebar.html')
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById('sidebar-component').innerHTML = data;
+  })
+  .catch(error => {
+    console.error('読み込み失敗:', error);
+  });
+});
+</script>
+
+<!--====== 本体 ======-->
 <body>
-  <h1>test commit & 表示チェック</h1>
+  <h1>Top</h1>
+  <div id="sidebar-component" class="sidebar"></div>
+
+  <div class="menu-div">
+    <table>
+      <td class="menu-td">
+          <a class="white" href="/">
+            <img class="menu-icon green" src="/resource/sidebar_icon/Top.png" />
+            <p class="white">メニューTop</p>
+          </a>
+      </td>
+
+
+      <td class="menu-td">
+        <a href="/ProbabilityCalculations/index.html">
+          <img class="menu-icon pink" src="/resource/sidebar_icon/ProbabilityCalculations.png" />
+          <p class="white">確率計算</p>
+        </a>
+      </td>
+    </table>
+
+  </div>
 </body>
 </html>

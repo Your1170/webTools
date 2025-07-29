@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>確率計算</title>
+
+  <link rel="icon" href="../resource/favicon/ProbabilityCalculations.ico" type="image/x-ico">
+  <link rel="stylesheet" href="../base.css">
+
+  <!-- jQuery読み込み -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<!--====== CSS ======-->
+<style type="text/css">
+  .input-div { padding: 10px };
+  .input-th { padding: 50px; }
+  .input-td { padding: 10px; text-align: center; }
+
+  .main-div{ position: absolute; top: 80px; left: 135px; width: 375px; height: 220px; margin-top: 10px; padding: 5px; background-color: #4a41a3; }
+  .info-div{ position: absolute; top: 350px; left: 135px; width: 375px; height:auto ;margin-top: 10px; padding: 5px; background-color: #8076ec; max-width: 410px; }
+
+  input { max-width: 80px; }
+</style>
+
+<!--====== script ======-->
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', () => {
+  // サイドバー読み込み
+  fetch('../sidebar.html')
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById('sidebar-component').innerHTML = data;
+  })
+  .catch(error => {
+    console.error('読み込み失敗:', error);
+  });
+});
+
+// 組み合わせ計算（nCr）
+function combination(n, r) {
+  if (r > n) return 0;
+  if (r === 0 || r === n) return 1;
+
+  r = Math.min(r, n - r); // 計算軽減
+  let numerator = 1;
+  let denominator = 1;
+
+  for (let i = 1; i <= r; i++) {
+    numerator *= (n - i + 1);
+    denominator *= i;
+  }
+  return numerator / denominator;
+}
+
+// 確率計算関数
+function calcProbability(totalDeck, wantCards, drawCount) {
+  if (wantCards > totalDeck || drawCount > totalDeck) {
+    return 0; // 不正な入力チェック
+  }
+
+  const noWant = combination(totalDeck - wantCards, drawCount);
+  const total = combination(totalDeck, drawCount);
+
+  const prob = 1 - (noWant / total);
+  return prob;
+}
+
+// 小数第二以下切り捨て関数
+function floor2(num) {
+  return Math.floor(num * 100) / 100;
+}
+
+function showAnswer() {
+  const nowDeck = Number($("#Now_deck").val());
+  const wantCard = Number($("#Want_card").val());
+  const drawCard = Number($("#Draw_card").val());
+
+  if (!nowDeck) {
+    alert("デッキ枚数を入力してください");
+    return;
+  }
+  if (!wantCard) {
+    alert("ほしいカード枚数を入力してください");
+    return;
+  }
+  if (!drawCard) {
+    alert("ドロー枚数を入力してください");
+    return;
+  }
+
+  let result;
+
+  // 補集合の法則を使用
+  result = calcProbability(nowDeck, wantCard, drawCard) *100;
+
+  $("#Answer").val(floor2(result) + "%");
+  // alert(draw_card);
+}
+</script>
+
+<!--====== 本体 ======-->
+<body>
+  <h1>確率計算</h1>
+  <div id="sidebar-component" class="sidebar"></div>
+
+  <div class="main-div">
+    <div class="input-div">
+      <table>
+
+        <th class="input-th white">引ける確率</th>
+        <tr></tr>
+        <td class="input-td"><input id="Answer" type="text" readonly></td>
+        <tr></tr>
+
+        <th class="input-th white">デッキの枚数</th>
+        <th class="input-th white">ほしいカード数</th>
+        <th class="input-th white">ドロー数</th>
+        <tr></tr>
+
+        <td class="input-td"><input id="Now_deck" type="number" autocomplete="off"></td>
+        <td class="input-td"><input id="Want_card" type="number" autocomplete="off"></td>
+        <td class="input-td"><input id="Draw_card" type="number" autocomplete="off"></td>
+        <tr></tr>
+
+        <td class="input-td"><button onclick="showAnswer()">計算開始</button></td>
+      </table>
+    </div>
+
+
+
+
+  </div>
+
+  <div class="info-div">
+    <h4>説明</h4>
+    <p>補集合の法則を用いて一枚以上引ける確率を計算します</p>
+
+    <h4>例</h4>
+    <p>60枚のデッキに4枚入っているカードがあります。</p>
+    <p>最初の７枚で引ける確率はどのくらいでしょうか</p>
+    <p>　</p>
+    <p>デッキ枚数 = 60</p>
+    <p>ほしいカード数 = 4</p>
+    <p>ドロー数= 7</p>
+  </div>
+
+</body>
+</html>
