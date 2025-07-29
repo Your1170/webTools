@@ -31,6 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
   .then(response => response.text())
   .then(data => {
     document.getElementById('sidebar-component').innerHTML = data;
+
+    // サイドバー用ローカル対応
+    const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
+    document.querySelectorAll('#sidebar-component a[data-link]').forEach(link => {
+      const relative = link.getAttribute('data-link');
+      link.setAttribute('href', basePath + relative);
+    });
+
+    // サイドバー用画像パス自動変更
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      const relative = img.getAttribute('data-src');
+      img.src = basePath + relative;
+    });
   })
   .catch(error => {
     console.error('読み込み失敗:', error);

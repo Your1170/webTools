@@ -27,11 +27,33 @@ document.addEventListener('DOMContentLoaded', () => {
   .then(response => response.text())
   .then(data => {
     document.getElementById('sidebar-component').innerHTML = data;
+    // ローカル対応
+    const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
+    // サイドバー用URL自動変更
+    document.querySelectorAll('#sidebar-component a[data-link]').forEach(link => {
+      const relative = link.getAttribute('data-link');
+      link.setAttribute('href', basePath + relative);
+    });
+
+    // サイドバー用画像パス自動変更
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      const relative = img.getAttribute('data-src');
+      img.src = basePath + relative;
+    });
   })
   .catch(error => {
     console.error('読み込み失敗:', error);
   });
 });
+
+  const basePath = location.hostname === 'your1170.github.io' ? '/webTools' : '';
+  // ローカル対応
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[data-link]').forEach(link => {
+      const relative = link.getAttribute('data-link');
+      link.setAttribute('href', basePath + relative);
+    });
+  });
 </script>
 
 <!--====== 本体 ======-->
@@ -42,16 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="menu-div">
     <table>
       <td class="menu-td">
-          <a class="white" href="/">
-            <img class="menu-icon green" src="/resource/sidebar_icon/Top.png" />
+          <a class="white" data-link="/">
+            <img class="menu-icon green" data-src="/resource/sidebar_icon/Top.png" />
             <p class="white">メニューTop</p>
           </a>
       </td>
 
 
       <td class="menu-td">
-        <a href="/ProbabilityCalculations/index.html">
-          <img class="menu-icon pink" src="/resource/sidebar_icon/ProbabilityCalculations.png" />
+        <a data-link="/ProbabilityCalculations/index.html">
+          <img class="menu-icon pink" data-src="/resource/sidebar_icon/ProbabilityCalculations.png" />
           <p class="white">確率計算</p>
         </a>
       </td>
