@@ -25,6 +25,16 @@
   height: 100%;
 }
 
+.info {
+  padding: 0px 25px 25px 25px;
+  .info-h3 {
+    display: inline-block;
+    border-bottom: 1px solid #f6ca97;
+    margin: 0px;
+    padding-bottom: 5px;
+  }
+}
+
 .title {
   border-bottom: 2px solid #f6ca97;
   color:#ff0051;

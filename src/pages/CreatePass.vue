@@ -238,16 +238,6 @@ const createPassWords = () => {
       }
     }
   }
-
-  .info {
-    padding: 0px 25px 25px 25px;
-    .info-h3 {
-      display: inline-block;
-      border-bottom: 1px solid #f6ca97;
-      margin: 0px;
-      padding-bottom: 5px;
-    }
-  }
 }
 
 @media screen and (max-width: 768px) {

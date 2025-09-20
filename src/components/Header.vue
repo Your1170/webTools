@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-
-interface PageLinks {
-  name: string;
-  path: string;
-}
-const pageLinks: PageLinks[] = [
-  { name: 'Top', path:'/' },
-  { name: 'パスワード作成', path:'/create_pass' },
-];
+import { pageLinks } from '../router/path'
 
 const toggleFlag = ref<boolean>(false);
-
 const toggleSwitch = () => { toggleFlag.value = !toggleFlag.value; };
-
 </script>
 
 <template>
@@ -186,7 +176,7 @@ const toggleSwitch = () => { toggleFlag.value = !toggleFlag.value; };
           text-decoration: none;
           text-align: left;
           color:#ffffff;
-          font-size: 1.8em;
+          font-size: 1.6em;
           border-bottom: 2px solid #ffffff;
 
           width: 60%;
