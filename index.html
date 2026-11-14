@@ -1,6 +1,36 @@
 <!doctype html>
 <html lang="ja">
   <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/webTools/monacoeditorwork/editor.worker.bundle.js",
+  "html": "/webTools/monacoeditorwork/html.worker.bundle.js",
+  "css": "/webTools/monacoeditorwork/css.worker.bundle.js",
+  "json": "/webTools/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/webTools/monacoeditorwork/ts.worker.bundle.js",
+  "javascript": "/webTools/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/webTools/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/webTools/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/webTools/monacoeditorwork/html.worker.bundle.js",
+  "razor": "/webTools/monacoeditorwork/html.worker.bundle.js"
+});</script>
+
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/webTools/Home.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,8 +38,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/webTools/assets/index-B87I4MbD.js"></script>
-    <link rel="stylesheet" crossorigin href="/webTools/assets/index-CwKBfe2p.css">
+    <script type="module" crossorigin src="/webTools/assets/index-BHIJG64-.js"></script>
+    <link rel="modulepreload" crossorigin href="/webTools/assets/monaco-editor-BvzGsKrv.js">
+    <link rel="stylesheet" crossorigin href="/webTools/assets/monaco-editor-CTbAJlYW.css">
+    <link rel="stylesheet" crossorigin href="/webTools/assets/index-yPc2EEs-.css">
   </head>
   <body>
     <div id="app"></div>
