@@ -34,4 +34,10 @@ export const pageLinks: TypePageLinks[] = [
     // Hash / fingerprint icon
     iconPath: 'M4 7h16M4 12h16M4 17h16M9 3v18M15 3v18',
   },
+  {
+    name: 'HTML GAME STUDIO',
+    path: '/html_game_studio',
+    // Code / terminal icon
+    iconPath: 'M16 18l6-6-6-6M8 6L2 12l6 6',
+  },
 ];
