@@ -23,6 +23,12 @@ export const pageLinks: TypePageLinks[] = [
     iconPath: 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4',
   },
   {
+    name: 'HTML GAME STUDIO',
+    path: '/html_game_studio',
+    // Code / terminal icon
+    iconPath: 'M16 18l6-6-6-6M8 6L2 12l6 6',
+  },
+  {
     name: '画像変換',
     path: '/image_converter',
     // Image / picture icon
@@ -33,11 +39,5 @@ export const pageLinks: TypePageLinks[] = [
     path: '/change_hash',
     // Hash / fingerprint icon
     iconPath: 'M4 7h16M4 12h16M4 17h16M9 3v18M15 3v18',
-  },
-  {
-    name: 'HTML GAME STUDIO',
-    path: '/html_game_studio',
-    // Code / terminal icon
-    iconPath: 'M16 18l6-6-6-6M8 6L2 12l6 6',
   },
 ];
