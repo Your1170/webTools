@@ -27,75 +27,130 @@ const ChangeHash = async () => {
       .join("");
   }
 }
-
 </script>
-<!-- SCSSのmainとtitleの中身はstyle.cssに入っている -->
+
 <template>
-  <div class="title">
-    <h1 class="page-title">ハッシュ化ツール</h1>
-  </div>
-  <div class="main">
-    <div class="main-hash">
-      <input class="main-input" v-model="hashInput" type="text" placeholder="Hash化したい文字を入力"></br>
+  <div class="page-wrapper">
+    <div class="page-title-block">
+      <h1 class="page-title">ハッシュ化ツール</h1>
+      <p class="page-subtitle">入力した文字列を SHA ハッシュ値に変換します</p>
     </div>
 
-    <div class="button">
-      <span class="button-span" @click="ChangeHash">ハッシュ化</span>
+    <!-- 入力カード -->
+    <div class="card">
+      <label class="form-label" for="hash-input">ハッシュ化したい文字列</label>
+      <input
+        id="hash-input"
+        class="form-input"
+        type="text"
+        v-model="hashInput"
+        placeholder="テキストを入力してください"
+        autocomplete="off"
+        @keydown.enter="ChangeHash"
+      />
+      <div class="action-row">
+        <button class="btn-primary" type="button" @click="ChangeHash">ハッシュ化</button>
+      </div>
     </div>
 
-    <div class="create-hash">
-      <ul class="hash-ul" v-for="(value, key) in hashResult">
-        <li class="hash-li">
-          <p>{{ key }}</p>
-          <textarea class="result-hash" :value="`${value}`" readonly></textarea>
-        </li>
-      </ul>
+    <!-- 結果テーブル -->
+    <div class="results-block" v-if="hashResult['SHA-256']">
+      <p class="section-label" style="margin-top: var(--space-8);">結果</p>
+      <div class="hash-table">
+        <div class="hash-row" v-for="(value, key) in hashResult" :key="key">
+          <span class="hash-type">{{ key }}</span>
+          <textarea
+            class="hash-value"
+            :value="value"
+            readonly
+            rows="2"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 仕様 -->
+    <div class="spec-section">
+      <p class="spec-title">仕様</p>
+      <div class="spec-item">
+        <p>Web Crypto API（<code>window.crypto.subtle</code>）を使用してハッシュ値を計算します。</p>
+        <p>HTTPS または localhost 環境でのみ動作します。</p>
+      </div>
+      <div class="spec-item">
+        <span class="spec-item-label">対応アルゴリズム</span>
+        <p>{{ hashTypes.join(' / ') }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.main {
-  .main-hash {
-    padding: 20px 0px 0px 0px;
-    text-align: center;
-    .main-input {
-      padding: 10px 0px;
-    }
-  }
+/* 実行ボタン */
+.action-row {
+  margin-top: var(--space-4);
+}
 
-  .button {
-    padding: 40px 0px;
-    text-align: center;
-    .button-span {
-      padding: 10px;
-      border: 1px solid #777;
-      background-color: #0a0a44;
-      transition: background-color 0.2s ease;
-    }
-    .button-span:hover {
-      background-color: hsl(240, 74%, 40%);
-    }
-  }
+/* 結果エリア */
+.results-block {
+  margin-top: var(--space-4);
+}
 
-  .create-hash {
-    text-align: center;
-    padding: 40px 0px;
-    .hash-ul {
-      list-style: none;
-      display: inline-block;
-      .hash-li {
-        .result-hash {
-          resize: none;
-          width: 250px;
-          height: 50px;
-        }
-      }
-    }
+.hash-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hash-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.hash-type {
+  padding-top: var(--space-1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary-light);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.hash-value {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+  word-break: break-all;
+  transition: border-color var(--transition-fast);
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
   }
 }
 
+/* レスポンシブ */
 @media screen and (max-width: 768px) {
+  .hash-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
 
+  .hash-type {
+    padding-top: 0;
+  }
 }
 </style>

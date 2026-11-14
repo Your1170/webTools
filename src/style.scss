@@ -1,75 +1,318 @@
+/* ============================================================
+   CSS Variables — Design Token
+   ============================================================ */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Base Colors */
+  --color-bg:        #0D1117;
+  --color-surface:   #161B22;
+  --color-panel:     #1C2128;
+  --color-elevated:  #222A33;
+  --color-border:    #30363D;
 
-  color-scheme: light dark;
-  color: #ffffffde;
-  background-color: #242424;
+  /* Text */
+  --color-text-primary:   #E6EDF3;
+  --color-text-secondary: #8B949E;
+  --color-text-muted:     #6E7681;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Accent */
+  --color-primary:        #58A6FF;
+  --color-primary-hover:  #388BFD;
+  --color-primary-active: #1F6FEB;
+  --color-primary-light:  #79C0FF;
+
+  /* Semantic */
+  --color-success: #3FB950;
+  --color-warning: #D29922;
+  --color-error:   #F85149;
+
+  /* Typography */
+  --font-sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+
+  /* Spacing */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Border */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Transition */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+
+  /* Sidebar */
+  --sidebar-width-collapsed: 64px;
+  --sidebar-width-expanded:  240px;
+  --sidebar-transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.main {
-  display: flex;
-  justify-content: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  background-color: #141414;
-  margin: 20px 10px;
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  width: 96%;
+html, body {
   height: 100%;
 }
 
-.info {
-  padding: 0px 25px 25px 25px;
-  .info-h3 {
-    display: inline-block;
-    border-bottom: 1px solid #f6ca97;
-    margin: 0px;
-    padding-bottom: 5px;
-  }
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-.title {
-  border-bottom: 2px solid #f6ca97;
-  color:#ff0051;
-  display: inline-block;
-  margin: 20px;
-  height: 55px;
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;  /* サイドバー + メインコンテンツの横並び */
+}
+
+/* サイドバー右隣のメインコンテンツ領域 */
+.app-main {
+  flex: 1;
+  min-width: 0;         /* flex子要素のoverflow防止 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   Layout Utilities
+   ============================================================ */
+
+/* ページコンテンツ共通ラッパー */
+.page-wrapper {
+  flex: 1;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+/* ページタイトル */
+.page-title-block {
+  margin-bottom: var(--space-8);
 
   .page-title {
-    margin: 0px 15px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .page-subtitle {
+    margin-top: var(--space-1);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
   }
 }
-@media screen and (max-width: 768px) {
-  .title {
-    display: block;
-    position: absolute;
-    margin: 0px;
-    top: 35px;
-    left: 20px;
 
-    border: none;
-    color:#ff0051;
+/* カード */
+.card {
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
 
-    .page-title {
-      margin: 0px 15px;
+/* セクション見出し */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+/* ============================================================
+   Form Elements
+   ============================================================ */
+
+/* 汎用ラベル */
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+/* テキスト入力 */
+.form-input {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Number input */
+.form-input-number {
+  @extend .form-input;
+  width: 80px;
+  text-align: center;
+}
+
+/* Checkbox */
+.form-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #0D1117;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--color-primary-active);
+    border-color: var(--color-primary-active);
+  }
+}
+
+.btn-secondary {
+  @extend .btn;
+  background-color: var(--color-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-panel);
+    border-color: var(--color-primary);
+    color: var(--color-primary-light);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--color-surface);
+  }
+}
+
+/* ============================================================
+   Info / Spec Section
+   ============================================================ */
+
+.spec-section {
+  margin-top: var(--space-10);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+
+  .spec-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .spec-item {
+    margin-bottom: var(--space-4);
+
+    .spec-item-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-primary-light);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 2px;
+      margin-bottom: var(--space-1);
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .spec-code {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      word-break: break-all;
     }
   }
 }
 
-#app {
-  max-width: 1280px;
-}
+/* ============================================================
+   Responsive
+   ============================================================ */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #ffffff;
-    background-color: #333333;
+@media screen and (max-width: 768px) {
+  .page-wrapper {
+    padding: var(--space-6) var(--space-4);
   }
 }

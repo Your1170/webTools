@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import Header from './components/Header.vue';
+import Sidebar from './components/Sidebar.vue';
 </script>
 
 <template>
-  <Header></Header>
-  <router-view />
+  <Sidebar />
+  <main class="app-main">
+    <router-view />
+  </main>
 </template>
 
 <style lang="scss" scoped>
-
-
+/* モバイルでは固定ヘッダー分の余白を確保 */
+.app-main {
+  @media screen and (max-width: 768px) {
+    padding-top: 56px;
+  }
+}
 </style>

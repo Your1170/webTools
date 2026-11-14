@@ -18,6 +18,13 @@ const isUse = reactive<UseType>({
   useSymbol: true,
 });
 const passwords = ref<string[]>([]);
+const copiedIndex = ref<number | null>(null);
+
+const copyPassword = async (value: string, index: number) => {
+  await navigator.clipboard.writeText(value);
+  copiedIndex.value = index;
+  setTimeout(() => { copiedIndex.value = null; }, 2000);
+};
 
 
 const SETTING = {
@@ -99,157 +106,239 @@ const createPassWords = () => {
 </script>
 
 <template>
-  <div class="title">
-    <h1 class="page-title">パスワード作成</h1>
-  </div>
-  <div class="main">
+  <div class="page-wrapper">
+    <div class="page-title-block">
+      <h1 class="page-title">パスワード作成</h1>
+      <p class="page-subtitle">オプションを選んでランダムなパスワードを生成します</p>
+    </div>
 
-    <div class="option">
-      <ul class="option-ul">
-        <li class="option-li">
-          <input class="input-number"
-          type="number"
-          inputmode="numeric"
-          name=""
-          v-model="isUse.numericChar"
-          min="1"
-          max="30"
-          autocomplete="off"
+    <!-- 設定カード -->
+    <div class="card">
+      <p class="section-label">オプション</p>
+
+      <div class="options">
+        <!-- 文字数 -->
+        <div class="option-row">
+          <label class="form-label option-label" for="pass-length">文字数</label>
+          <input
+            id="pass-length"
+            class="form-input-number"
+            type="number"
+            inputmode="numeric"
+            v-model="isUse.numericChar"
+            min="1"
+            max="30"
+            autocomplete="off"
           />
-          <span class="option-span">文字数</span>
-        </li>
+        </div>
 
-        <li class="option-li">
-          <input class="input-checkbox" type="checkbox" v-model="isUse.useLower">
-          <span class="option-span">英小文字</span>
-        </li>
+        <!-- チェックボックス群 -->
+        <div class="checkboxes">
+          <label class="checkbox-label">
+            <input class="form-checkbox" type="checkbox" v-model="isUse.useLower">
+            <span>英小文字</span>
+          </label>
+          <label class="checkbox-label">
+            <input class="form-checkbox" type="checkbox" v-model="isUse.useUpper">
+            <span>英大文字</span>
+          </label>
+          <label class="checkbox-label">
+            <input class="form-checkbox" type="checkbox" v-model="isUse.useNumber">
+            <span>数字</span>
+          </label>
+          <label class="checkbox-label">
+            <input class="form-checkbox" type="checkbox" v-model="isUse.useSymbol">
+            <span>記号</span>
+          </label>
+        </div>
+      </div>
 
-        <li class="option-li">
-          <input class="input-checkbox" type="checkbox" v-model="isUse.useUpper">
-          <span class="option-span">英大文字</span>
-        </li>
-
-        <li class="option-li">
-          <input class="input-checkbox" type="checkbox" v-model="isUse.useNumber">
-          <span class="option-span">数字</span>
-        </li>
-
-        <li class="option-li">
-          <input class="input-checkbox" type="checkbox" v-model="isUse.useSymbol">
-          <span class="option-span">記号</span>
-        </li>
-      </ul>
+      <div class="action-row">
+        <button class="btn-primary" type="button" @click="createPassWords">生成する</button>
+      </div>
     </div>
 
-    <div class="create-button">
-      <span class="create-span" @click="createPassWords">生成</span>
+    <!-- 結果 -->
+    <div class="results-block" v-if="passwords.length > 0">
+      <p class="section-label" style="margin-top: var(--space-8);">生成結果 — {{ passwords.length }} 件</p>
+      <div class="passwords-grid">
+        <div class="password-item" v-for="(value, index) in passwords" :key="index">
+          <textarea
+            class="password-textarea"
+            :value="value"
+            rows="1"
+          ></textarea>
+          <button
+            class="copy-btn"
+            :class="{ copied: copiedIndex === index }"
+            type="button"
+            :aria-label="`パスワードをコピー: ${value}`"
+            @click="copyPassword(value, index)"
+          >
+            <span class="copy-icon" aria-hidden="true">
+              <!-- コピー前: クリップボードアイコン -->
+              <svg v-if="copiedIndex !== index" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <!-- コピー後: チェックアイコン -->
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div class="passwords">
-      <ul class="passwords-ul">
-        <li class="passwords-li">
-          <textarea class="passwords-textarea" v-for="values in passwords" :value="`${values}`"></textarea>
-        </li>
-      </ul>
-    </div>
-
-    <div class="info">
-      <h1>仕様</h1>
-      <p>最大で{{SETTING.MAX_LENGTH}}文字、最小で{{ SETTING.MIN_LENGHT }}文字のパスワードを作成します。</p>
-      <p>英大文字、英子文字、記号のいずれかにチェックを入れると必ず1文字は含めたパスワードを{{ SETTING.MAX_CREATE }}個作成します。</p>
-    </br>
-      <h3 class="info-h3">英小文字</h3>
-      <p>{{ SETTING_STRING.LOWER }}</p>
-      <h3 class="info-h3">英大文字</h3>
-      <p>{{ SETTING_STRING.UPPER }}</p>
-      <h3 class="info-h3">数字</h3>
-      <p>{{ SETTING_STRING.NUMBER }}</p>
-      <h3 class="info-h3">記号</h3>
-      <p>{{ SETTING_STRING.SYMBOL }}</p>
+    <!-- 仕様 -->
+    <div class="spec-section">
+      <p class="spec-title">仕様</p>
+      <div class="spec-item">
+        <p>最大 {{ SETTING.MAX_LENGTH }} 文字、最小 {{ SETTING.MIN_LENGHT }} 文字のパスワードを {{ SETTING.MAX_CREATE }} 個生成します。</p>
+        <p>チェックしたカテゴリからそれぞれ最低 1 文字が必ず含まれます。</p>
+      </div>
+      <div class="spec-item">
+        <span class="spec-item-label">英小文字</span>
+        <p class="spec-code">{{ SETTING_STRING.LOWER }}</p>
+      </div>
+      <div class="spec-item">
+        <span class="spec-item-label">英大文字</span>
+        <p class="spec-code">{{ SETTING_STRING.UPPER }}</p>
+      </div>
+      <div class="spec-item">
+        <span class="spec-item-label">数字</span>
+        <p class="spec-code">{{ SETTING_STRING.NUMBER }}</p>
+      </div>
+      <div class="spec-item">
+        <span class="spec-item-label">記号</span>
+        <p class="spec-code">{{ SETTING_STRING.SYMBOL }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.main {
-  ul {
-    list-style: none; 
-  }
+/* オプション行 */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
 
-  .option {
-    display: flex;
-    justify-content: center;
-    padding: 15px 0px;
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 
-    width: auto;
-    height: auto;
-
-    .option-ul {
-      display: flex;
-
-      .option-li {
-        display: flex;
-        padding: 0px 15px 0px 0px;
-         .option-span {
-          font-size: 1.2em;
-         }
-      }
-    }
-
-    .input-number {
-      text-align: center;
-      margin: 0px 5px 0px 0px;
-    }
-
-    .input-checkbox {
-      width: 20px;
-      height: auto;
-
-      padding: 14px;
-    }
-  }
-
-  .create-button {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0px;
-    .create-span {
-      padding: 10px 25px;
-      border: 1px solid #777;
-      background-color: #0a0a44;
-      transition: background-color 0.2s ease;
-    }
-    .create-span:hover {
-      background-color: hsl(240, 74%, 40%);
-    }
-
-  }
-
-  .passwords {
-    display: flex;
-    justify-content: center;
-
-    .passwords-ul {
-      padding: 0px 0px 0px 25px;
-        .passwords-li {
-          .passwords-textarea {
-            resize: none;
-        }
-      }
-    }
+  .option-label {
+    margin-bottom: 0;
+    white-space: nowrap;
   }
 }
 
+/* チェックボックス群 */
+.checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover span {
+    color: var(--color-primary-light);
+  }
+}
+
+/* 生成ボタン */
+.action-row {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* 結果グリッド */
+.results-block {
+  margin-top: var(--space-4);
+}
+
+.passwords-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.password-item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.password-textarea {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  transition: border-color var(--transition-fast);
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  }
+}
+
+/* コピーボタン */
+.copy-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  background-color: var(--color-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-panel);
+    border-color: var(--color-primary);
+    color: var(--color-primary-light);
+  }
+
+  &.copied {
+    background-color: rgba(63, 185, 80, 0.12);
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+}
+
+/* レスポンシブ */
 @media screen and (max-width: 768px) {
-  .main {
-    .option {
-      .option-ul {
-        flex-direction: column;
-        .option-span {
-          padding-left: 10px;
-        }
-      }
-    }
+  .checkboxes {
+    gap: var(--space-3);
+  }
+
+  .passwords-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
