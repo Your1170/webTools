@@ -23,6 +23,12 @@ export const pageLinks: TypePageLinks[] = [
     iconPath: 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4',
   },
   {
+    name: '画像変換',
+    path: '/image_converter',
+    // Image / picture icon
+    iconPath: 'M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z',
+  },
+  {
     name: 'ハッシュ化ツール',
     path: '/change_hash',
     // Hash / fingerprint icon
