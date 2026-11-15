@@ -190,11 +190,18 @@ const onDrop = (event: DragEvent) => {
 // ============================================================
 
 const downloadHtml = () => {
+  const input = window.prompt('ファイル名を入力してください', 'index.html')
+  // キャンセル時は何もしない
+  if (input === null) return
+  // 空文字の場合は index.html にフォールバック
+  const rawName = input.trim() || 'index.html'
+  // .html / .htm 拡張子がなければ付与する
+  const fileName = /\.html?$/i.test(rawName) ? rawName : `${rawName}.html`
   const blob = new Blob([htmlSource.value], { type: 'text/html;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'index.html'
+  a.download = fileName
   a.click()
   URL.revokeObjectURL(url)
 }
