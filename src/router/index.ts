@@ -4,6 +4,7 @@ import Pass from '../pages/CreatePass.vue'
 import Hash from '../pages/ChangeHash.vue'
 import ImageConverter from '../pages/ImageConverter.vue'
 import HtmlGameStudio from '../pages/HtmlGameStudio.vue'
+import SvgConverter from '../pages/SvgConverter.vue'
 
 const routes = [
   { path: '/', component: Top },
@@ -11,6 +12,7 @@ const routes = [
   { path: '/change_hash', component: Hash },
   { path: '/image_converter', component: ImageConverter },
   { path: '/html_game_studio', component: HtmlGameStudio },
+  { path: '/svg_converter', component: SvgConverter },
 ]
 
 const base = (import.meta.env.MODE === 'production') ? '/webTools/' : '/'

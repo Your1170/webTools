@@ -40,4 +40,10 @@ export const pageLinks: TypePageLinks[] = [
     // Hash / fingerprint icon
     iconPath: 'M4 7h16M4 12h16M4 17h16M9 3v18M15 3v18',
   },
+  {
+    name: 'SVG変換',
+    path: '/svg_converter',
+    // SVG / vector icon
+    iconPath: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+  },
 ];
