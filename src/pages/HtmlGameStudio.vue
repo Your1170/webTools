@@ -61,6 +61,12 @@ const editorContainerRef = ref<HTMLDivElement | null>(null)
 /** Monaco Editor インスタンス */
 let editorInstance: MonacoType.editor.IStandaloneCodeEditor | null = null
 
+/** ペーストモーダルの表示状態 */
+const pasteModalOpen = ref<boolean>(false)
+
+/** ペーストモーダル内 textarea の内容 */
+const pasteText = ref<string>('')
+
 // ============================================================
 // Monaco Editor の初期化・破棄
 // ============================================================
@@ -207,6 +213,61 @@ const downloadHtml = () => {
 }
 
 // ============================================================
+// コピー
+// ============================================================
+
+const isCopied = ref<boolean>(false)
+
+const copyHtml = async () => {
+  await navigator.clipboard.writeText(htmlSource.value)
+  isCopied.value = true
+  setTimeout(() => { isCopied.value = false }, 2000)
+}
+
+// ============================================================
+// ペースト（スマートフォン用モーダル）
+// ============================================================
+
+const openPasteModal = () => {
+  pasteText.value = ''
+  pasteModalOpen.value = true
+}
+
+const closePasteModal = () => {
+  pasteModalOpen.value = false
+  pasteText.value = ''
+}
+
+const applyPasteText = () => {
+  if (!pasteText.value.trim()) {
+    closePasteModal()
+    return
+  }
+  const confirmed =
+    htmlSource.value === '' ||
+    htmlSource.value === INITIAL_HTML ||
+    window.confirm('現在の編集内容が上書きされます。続けますか？')
+  if (!confirmed) return
+  htmlSource.value = pasteText.value
+  editorInstance?.setValue(pasteText.value)
+  closePasteModal()
+  activeTab.value = 'editor'
+}
+
+// ============================================================
+// クリア
+// ============================================================
+
+const clearEditor = () => {
+  const confirmed = window.confirm('エディタの内容を空にします。続けますか？')
+  if (!confirmed) return
+  htmlSource.value = ''
+  editorInstance?.setValue('')
+  previewSrcdoc.value = ''
+  activeTab.value = 'editor'
+}
+
+// ============================================================
 // リセット
 // ============================================================
 
@@ -298,6 +359,18 @@ const resetEditor = () => {
           <span class="btn-label">読み込み</span>
         </button>
 
+        <!-- ペースト（スマートフォンのみ表示） -->
+        <button class="btn-secondary btn-sm mobile-only" type="button" @click="openPasteModal"
+          title="コードを貼り付ける" aria-label="コードを貼り付ける">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+          <span class="btn-label">ペースト</span>
+        </button>
+
         <!-- 実行 -->
         <button class="btn-primary btn-sm" type="button" @click="runPreview"
           title="プレビューを実行する" aria-label="プレビューを実行する">
@@ -320,6 +393,40 @@ const resetEditor = () => {
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
           <span class="btn-label">DL</span>
+        </button>
+
+        <!-- コピー -->
+        <button class="btn-secondary btn-sm" type="button" @click="copyHtml"
+          :title="isCopied ? 'コピーしました' : 'HTMLをクリップボードにコピーする'"
+          :aria-label="isCopied ? 'コピーしました' : 'HTMLをクリップボードにコピーする'">
+          <!-- コピー前：copy アイコン -->
+          <svg v-if="!isCopied" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <!-- コピー後：check アイコン -->
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span class="btn-label">{{ isCopied ? 'コピー済み' : 'コピー' }}</span>
+        </button>
+
+        <!-- クリア -->
+        <button class="btn-secondary btn-sm btn-danger" type="button" @click="clearEditor"
+          title="エディタを空にする" aria-label="エディタを空にする">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          <span class="btn-label">クリア</span>
         </button>
 
         <!-- リセット -->
@@ -381,6 +488,50 @@ const resetEditor = () => {
     <p class="drop-hint" aria-hidden="true">
       HTMLファイルをここにドラッグ＆ドロップして読み込むこともできます
     </p>
+
+    <!-- ペーストヒント（スマートフォンのみ表示） -->
+    <p class="paste-hint" aria-hidden="true">
+      コードを貼り付けるには、エディタ内を長押しして「ペースト」を選択してください
+    </p>
+
+    <!-- ペーストモーダル（スマートフォン用） -->
+    <transition name="modal-fade">
+      <div v-if="pasteModalOpen" class="modal-overlay" @click.self="closePasteModal"
+        role="dialog" aria-modal="true" aria-label="コードを貼り付け">
+        <div class="modal-panel">
+          <div class="modal-header">
+            <h2 class="modal-title">コードを貼り付け</h2>
+            <button class="modal-close" type="button" @click="closePasteModal" aria-label="閉じる">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <p class="modal-hint">テキストエリアを長押しして「ペースト」を選択してください</p>
+          <textarea
+            v-model="pasteText"
+            class="paste-textarea"
+            placeholder="ここにHTMLコードを貼り付けてください"
+            spellcheck="false"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+          />
+          <div class="modal-actions">
+            <button class="btn-secondary btn-sm" type="button" @click="closePasteModal">
+              キャンセル
+            </button>
+            <button class="btn-primary btn-sm" type="button" @click="applyPasteText"
+              :disabled="!pasteText.trim()">
+              エディタに反映
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
 
     <!-- 非表示ファイル入力 -->
     <input
@@ -612,6 +763,155 @@ const resetEditor = () => {
 
   @media screen and (max-width: 768px) {
     display: none;
+  }
+}
+
+.paste-hint {
+  display: none;
+  margin-top: var(--space-3);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: center;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+}
+
+/* ============================================================
+   スマートフォン限定表示
+   ============================================================ */
+.mobile-only {
+  display: none;
+
+  @media screen and (max-width: 768px) {
+    display: inline-flex;
+  }
+}
+
+/* ============================================================
+   ペーストモーダル
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: rgba(13, 17, 23, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;  // スマートフォンで下から出るシート形式
+  justify-content: center;
+  padding: var(--space-4);
+
+  @media screen and (min-width: 769px) {
+    align-items: center;
+  }
+}
+
+.modal-panel {
+  width: 100%;
+  max-width: 560px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-elevated);
+    color: var(--color-text-primary);
+  }
+}
+
+.modal-hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.paste-textarea {
+  width: 100%;
+  height: 240px;
+  padding: var(--space-3);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* ============================================================
+   モーダルトランジション
+   ============================================================ */
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+
+  .modal-panel {
+    transform: translateY(16px);
+  }
+}
+.modal-fade-enter-to,
+.modal-fade-leave-from {
+  opacity: 1;
+
+  .modal-panel {
+    transform: translateY(0);
+  }
+}
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity var(--transition-base);
+
+  .modal-panel {
+    transition: transform var(--transition-base);
   }
 }
 
