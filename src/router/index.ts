@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Top from '../pages/Top.vue'
 import Pass from '../pages/CreatePass.vue'
 import Hash from '../pages/ChangeHash.vue'
@@ -15,7 +15,7 @@ const routes = [
 
 const base = (import.meta.env.MODE === 'production') ? '/webTools/' : '/'
 const router = createRouter({
-  history: createWebHistory(base),
+  history: createWebHashHistory(base),
   routes,
 })
 
