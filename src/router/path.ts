@@ -35,15 +35,15 @@ export const pageLinks: TypePageLinks[] = [
     iconPath: 'M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z',
   },
   {
-    name: 'ハッシュ化ツール',
-    path: '/change_hash',
-    // Hash / fingerprint icon
-    iconPath: 'M4 7h16M4 12h16M4 17h16M9 3v18M15 3v18',
-  },
-  {
     name: 'SVG変換',
     path: '/svg_converter',
     // SVG / vector icon
     iconPath: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+  },
+  {
+    name: 'ハッシュ化ツール',
+    path: '/change_hash',
+    // Hash / fingerprint icon
+    iconPath: 'M4 7h16M4 12h16M4 17h16M9 3v18M15 3v18',
   },
 ];
