@@ -284,6 +284,7 @@ const resetEditor = () => {
 <template>
   <div
     class="studio-wrapper"
+    :class="{ 'is-preview': activeTab === 'preview' }"
     @dragover="onDragover"
     @dragleave="onDragleave"
     @drop="onDrop"
@@ -552,12 +553,20 @@ const resetEditor = () => {
    ============================================================ */
 .studio-wrapper {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   max-width: none;        // page-wrapper の 860px 制限を解除
   width: 100%;
+  overflow: hidden;
   padding: var(--space-6) var(--space-6) var(--space-4);
   position: relative;     // ドロップオーバーレイの基準
+
+  // プレビュータブ表示中はページ全体をスクロールさせる
+  &.is-preview {
+    overflow: visible;
+    min-height: unset;
+  }
 
   @media screen and (max-width: 768px) {
     padding: var(--space-4) var(--space-4) var(--space-3);
@@ -651,20 +660,19 @@ const resetEditor = () => {
    ============================================================ */
 .studio-panel {
   flex: 1;
+  min-height: 0;
   position: relative;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   background-color: var(--color-panel);
-  // 高さはビューポートから逆算
-  // PC: ヘッダー(56px想定なし) + padding上下 + ページタイトルブロック + ツールバー + ヒント + 余白
-  height: calc(100vh - 240px);
-  min-height: 320px;
 
-  @media screen and (max-width: 768px) {
-    // モバイル: 固定ヘッダー(56px) + padding上下 + タイトル + ツールバー + 余白
-    height: calc(100vh - 56px - 220px);
-    min-height: 280px;
+  // プレビュータブ表示中は高さをコンテンツに委ねる
+  .is-preview & {
+    flex: none;
+    min-height: unset;
+    height: auto;
+    overflow: visible;
   }
 }
 
@@ -686,6 +694,12 @@ const resetEditor = () => {
   }
 }
 
+// プレビュータブ表示中：preview-pane だけ通常フローに戻す
+.is-preview .preview-pane {
+  position: static;
+  inset: unset;
+}
+
 /* ============================================================
    Monaco Editor コンテナ
    ============================================================ */
@@ -700,10 +714,16 @@ const resetEditor = () => {
    ============================================================ */
 .preview-iframe {
   width: 100%;
-  height: 100%;
+  height: 100vh;          // コンテンツが画面高さを使う場合のデフォルト
   border: none;
   display: block;
   background: #fff;
+
+  // ページフロー内に戻ったときはコンテンツの高さのまま自然に伸びる
+  .is-preview & {
+    height: auto;
+    min-height: 100vh;
+  }
 }
 
 /* 未実行状態のプレースホルダー */
@@ -724,6 +744,8 @@ const resetEditor = () => {
     font-size: 0.875rem;
   }
 }
+
+/* プレビューペイン（is-preview 時のスクロール設定は不要になったので削除） */
 
 /* ============================================================
    ドロップオーバーレイ
