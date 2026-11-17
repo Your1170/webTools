@@ -15,7 +15,7 @@ const routes = [
   { path: '/svg_converter', component: SvgConverter },
 ]
 
-// ドメイン取得して設定したので修正。
+// ドメイン取得して設定したので修正。もしPagesそのままに戻す場合は『=== 'production'』で全体検索をする。
 // const base = (import.meta.env.MODE === 'production') ? '/webTools/' : '/'
 const router = createRouter({
   history: createWebHashHistory(/*base*/),

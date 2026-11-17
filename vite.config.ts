@@ -6,7 +6,7 @@ import monacoEditorPluginModule from 'vite-plugin-monaco-editor'
 const monacoEditorPlugin = (monacoEditorPluginModule as unknown as { default: typeof monacoEditorPluginModule }).default
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ /*mode*/ }) => ({
   plugins: [
     vue(),
     // Monaco Editor の worker ファイルをローカルバンドルに組み込む
@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
       languageWorkers: ['editorWorkerService', 'html', 'css', 'json', 'typescript'],
     }),
   ],
-  base: mode === 'production' ? '/webTools/' : '/',
+  base: '/', // mode === 'production' ? '/webTools/' : '/',
   build: {
     rollupOptions: {
       output: {
