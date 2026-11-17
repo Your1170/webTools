@@ -15,9 +15,10 @@ const routes = [
   { path: '/svg_converter', component: SvgConverter },
 ]
 
-const base = (import.meta.env.MODE === 'production') ? '/webTools/' : '/'
+// ドメイン取得して設定したので修正。
+// const base = (import.meta.env.MODE === 'production') ? '/webTools/' : '/'
 const router = createRouter({
-  history: createWebHashHistory(base),
+  history: createWebHashHistory(/*base*/),
   routes,
 })
 
